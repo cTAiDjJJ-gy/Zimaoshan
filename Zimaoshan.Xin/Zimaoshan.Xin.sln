@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zimaoshan.Xin.Cache.Foundation", "Zimaoshan.Xin.Cache.Foundation\Zimaoshan.Xin.Cache.Foundation.csproj", "{3E01133C-39A6-4556-9089-EF2566BB190A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zimaoshan.Xin.Core", "Zimaoshan.Xin.Core\Zimaoshan.Xin.Core.csproj", "{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E01133C-39A6-4556-9089-EF2566BB190A} = {3E01133C-39A6-4556-9089-EF2566BB190A}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E01133C-39A6-4556-9089-EF2566BB190A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E01133C-39A6-4556-9089-EF2566BB190A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E01133C-39A6-4556-9089-EF2566BB190A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E01133C-39A6-4556-9089-EF2566BB190A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0081D5F3-445F-40EB-A9B6-CA91CD7C72B5}
+	EndGlobalSection
+EndGlobal
