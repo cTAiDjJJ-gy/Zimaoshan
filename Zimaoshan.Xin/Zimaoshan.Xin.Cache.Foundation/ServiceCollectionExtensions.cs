@@ -10,4 +10,10 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddRedisCache(this IServiceCollection services)
+    {
+        services.AddSingleton<ICache, DefaultRedisCache>();
+        return services;
+    }
 }
