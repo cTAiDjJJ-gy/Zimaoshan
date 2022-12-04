@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddLocalCache();
-builder.Services.AddRedisCache();
+//builder.Services.AddRedisCache();
+builder.Services.AddHybridCache();
 
 var app = builder.Build();
 

@@ -1,11 +1,13 @@
-﻿namespace Zimaoshan.Xin.Cache.Foundation
+﻿namespace Zimaoshan.Xin.Cache.Foundation;
+
+/// <summary>
+/// ICache
+/// </summary>
+public interface ICache
 {
-    public interface ICache
-    {
-        T? Get<T>(string key);
+    T? Get<T>(string key);
 
-        void Remove(string key);
+    void Remove(string key);
 
-        void Set<T>(string key, T obj);
-    }
+    void Set<T>(string key, T obj);
 }

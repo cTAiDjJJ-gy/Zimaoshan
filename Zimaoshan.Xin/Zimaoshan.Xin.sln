@@ -3,12 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zimaoshan.Xin.Cache.Foundation", "Zimaoshan.Xin.Cache.Foundation\Zimaoshan.Xin.Cache.Foundation.csproj", "{3E01133C-39A6-4556-9089-EF2566BB190A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zimaoshan.Xin.Cache.Foundation", "Zimaoshan.Xin.Cache.Foundation\Zimaoshan.Xin.Cache.Foundation.csproj", "{3E01133C-39A6-4556-9089-EF2566BB190A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zimaoshan.Xin.Core", "Zimaoshan.Xin.Core\Zimaoshan.Xin.Core.csproj", "{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zimaoshan.Xin.Core", "Zimaoshan.Xin.Core\Zimaoshan.Xin.Core.csproj", "{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3E01133C-39A6-4556-9089-EF2566BB190A} = {3E01133C-39A6-4556-9089-EF2566BB190A}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zimaoshan.Xin.Web", "Zimaoshan.Xin.Web\Zimaoshan.Xin.Web.csproj", "{CAC896B7-E9F8-4AC2-B0C8-7F0B46D016EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000DE75D-32E2-41BD-9D1C-92AA9D4A27E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAC896B7-E9F8-4AC2-B0C8-7F0B46D016EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAC896B7-E9F8-4AC2-B0C8-7F0B46D016EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAC896B7-E9F8-4AC2-B0C8-7F0B46D016EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAC896B7-E9F8-4AC2-B0C8-7F0B46D016EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

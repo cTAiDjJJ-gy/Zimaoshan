@@ -2,9 +2,14 @@
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace Zimaoshan.Xin.Cache.Foundation;
+namespace Zimaoshan.Xin.Cache.Foundation.Impl;
 
-public class DefaultRedisCache : ICache
+/// <summary>
+/// redis缓存
+/// https://www.thecodebuzz.com/redis-distributed-cache-asp-net-core-csharp-redis-examples/
+/// https://www.thecodebuzz.com/redis-dependency-injection-connectionmultiplexer-redis-cache-netcore-csharp/
+/// </summary>
+public class DefaultRedisCache : IDistributedCache
 {
     #region Fields
 
@@ -29,7 +34,7 @@ public class DefaultRedisCache : ICache
         var cache = GetDatabase();
         var result = cache.StringGet(key);
 
-        return !result.IsNullOrEmpty ? Deserialize<T>(result) : default(T);
+        return !result.IsNullOrEmpty ? Deserialize<T>(result) : default;
     }
 
     public void Remove(string key)
@@ -41,7 +46,7 @@ public class DefaultRedisCache : ICache
     public void Set<T>(string key, T obj)
     {
         var cache = GetDatabase();
-        cache.StringSet(key, Serialize<T>(obj), TimeSpan.FromMinutes(5));
+        cache.StringSet(key, Serialize(obj), TimeSpan.FromMinutes(5));
     }
 
     #endregion
@@ -73,7 +78,7 @@ public class DefaultRedisCache : ICache
     /// <returns></returns>
     private T? Deserialize<T>(byte[]? bytes)
     {
-        if (bytes is null) return default(T);
+        if (bytes is null) return default;
 
         var span = new ReadOnlySpan<byte>(bytes, 0, bytes.Length);
         var value = JsonSerializer.Deserialize<T>(span);
