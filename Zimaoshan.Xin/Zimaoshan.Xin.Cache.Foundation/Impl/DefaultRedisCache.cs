@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
 using System.Text.Json;
 
 namespace Zimaoshan.Xin.Cache.Foundation.Impl;
@@ -13,17 +12,13 @@ public class DefaultRedisCache : IDistributedCache
 {
     #region Fields
 
-    private readonly Lazy<ConnectionMultiplexer> _connectionMultiplexer;
+    private readonly IRedisDatabaseProvider _redisDatabaseProvider;
 
     #endregion
 
     #region Ctor
 
-    public DefaultRedisCache(IConfiguration configuration)
-    {
-        var connection = configuration.GetConnectionString("Redis");
-        _connectionMultiplexer = new Lazy<ConnectionMultiplexer>(CreateConnectionMultiplexer(connection));
-    }
+    public DefaultRedisCache(IRedisDatabaseProvider redisDatabaseProvider) => _redisDatabaseProvider = redisDatabaseProvider;
 
     #endregion
 
@@ -31,16 +26,14 @@ public class DefaultRedisCache : IDistributedCache
 
     public T? Get<T>(string key)
     {
-        var cache = GetDatabase();
-        var result = cache.StringGet(key);
+        var result = GetDatabase().StringGet(key);
 
         return !result.IsNullOrEmpty ? Deserialize<T>(result) : default;
     }
 
     public void Remove(string key)
     {
-        var cache = GetDatabase();
-        cache.KeyDelete(key);
+        GetDatabase().KeyDelete(key);
     }
 
     public void Set<T>(string key, T obj)
@@ -55,23 +48,10 @@ public class DefaultRedisCache : IDistributedCache
     /// 获取数据库
     /// </summary>
     /// <returns></returns>
-    private IDatabase GetDatabase()
-    {
-        return _connectionMultiplexer.Value.GetDatabase();
-    }
+    private IDatabase GetDatabase() => _redisDatabaseProvider.GetDatabase();
 
     /// <summary>
-    /// 链接Redis
-    /// </summary>
-    /// <param name="connection"></param>
-    /// <returns></returns>
-    private ConnectionMultiplexer CreateConnectionMultiplexer(string connection)
-    {
-        return ConnectionMultiplexer.Connect(connection);
-    }
-
-    /// <summary>
-    /// 
+    /// 反序列化
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="bytes"></param>
@@ -86,7 +66,7 @@ public class DefaultRedisCache : IDistributedCache
     }
 
     /// <summary>
-    /// 
+    /// 序列化
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>

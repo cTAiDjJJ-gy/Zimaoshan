@@ -16,10 +16,7 @@ public class DefaultLocalCache : ILocalCache
 
     #region Ctor
 
-    public DefaultLocalCache(IMemoryCache cache)
-    {
-        _cache = cache;
-    }
+    public DefaultLocalCache(IMemoryCache cache) => _cache = cache;
 
     #endregion
 
@@ -37,15 +34,9 @@ public class DefaultLocalCache : ILocalCache
         return default;
     }
 
-    public void Remove(string key)
-    {
-        _cache.Remove(key);
-    }
+    public void Remove(string key) => _cache.Remove(key);
 
-    public void Set<T>(string key, T obj)
-    {
-        _cache.Set(key, obj, DateTimeOffset.Now.Add(TimeSpan.FromMinutes(5)));
-    }
+    public void Set<T>(string key, T obj) => _cache.Set(key, obj, DateTimeOffset.Now.Add(TimeSpan.FromMinutes(5)));
 
     #endregion
 }

@@ -23,7 +23,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddMemoryCache();
         services.AddSingleton<ILocalCache, DefaultLocalCache>();
+        services.AddSingleton<IRedisDatabaseProvider, RedisDatabaseProvider>();
         services.AddSingleton<IDistributedCache, DefaultRedisCache>();
+
         services.Replace(ServiceDescriptor.Singleton(typeof(ICache), typeof(DefaultRedisHybridCache)));
 
         return services;
