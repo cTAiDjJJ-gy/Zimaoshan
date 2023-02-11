@@ -1,5 +1,4 @@
 ﻿using StackExchange.Redis;
-using System.Text.Json;
 
 namespace Zimaoshan.Xin.Cache.Foundation.Impl;
 
@@ -28,7 +27,7 @@ public class DefaultRedisCache : IDistributedCache
     {
         var result = GetDatabase().StringGet(key);
 
-        return !result.IsNullOrEmpty ? Deserialize<T>(result) : default;
+        return !result.IsNullOrEmpty ? result.Deserialize<T>() : default;
     }
 
     public void Remove(string key)
@@ -39,7 +38,7 @@ public class DefaultRedisCache : IDistributedCache
     public void Set<T>(string key, T obj)
     {
         var cache = GetDatabase();
-        cache.StringSet(key, Serialize(obj), TimeSpan.FromMinutes(5));
+        cache.StringSet(key, obj.Serialize<T>(), TimeSpan.FromMinutes(5));
     }
 
     #endregion
@@ -49,34 +48,4 @@ public class DefaultRedisCache : IDistributedCache
     /// </summary>
     /// <returns></returns>
     private IDatabase GetDatabase() => _redisDatabaseProvider.GetDatabase();
-
-    /// <summary>
-    /// 反序列化
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="bytes"></param>
-    /// <returns></returns>
-    private T? Deserialize<T>(byte[]? bytes)
-    {
-        if (bytes is null) return default;
-
-        var span = new ReadOnlySpan<byte>(bytes, 0, bytes.Length);
-        var value = JsonSerializer.Deserialize<T>(span);
-        return value;
-    }
-
-    /// <summary>
-    /// 序列化
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private byte[] Serialize<T>(T value)
-    {
-        using var ms = new MemoryStream();
-        var utf8JsonWriter = new Utf8JsonWriter(ms);
-        JsonSerializer.Serialize(utf8JsonWriter, value);
-
-        return ms.ToArray();
-    }
 }
