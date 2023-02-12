@@ -7,7 +7,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
     /// .Net Core 依赖注入扩展
     /// https://mp.weixin.qq.com/s/47jvM9lRtxk_JkHEQAh09w
     /// </summary>
-    public static class DependencyInjectionExtensions
+    internal static class DependencyInjectionExtensions
     {
         /// <summary>
         /// 注册
@@ -30,7 +30,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <param name="assembly"></param>
-        private static void RegisterDependenciesByAssembly(this IServiceCollection services, Assembly assembly)
+        public static void RegisterDependenciesByAssembly(this IServiceCollection services, Assembly assembly)
         {
             var types = assembly.GetDependenciesTypes();
 
@@ -49,7 +49,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        private static List<Type> GetDependenciesTypes(this Assembly assembly)
+        public static List<Type> GetDependenciesTypes(this Assembly assembly)
         {
             return assembly
                 .GetTypes()
@@ -66,7 +66,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static Type? FindDependencyInterface(this Type type)
+        public static Type? FindDependencyInterface(this Type type)
         {
             var t = type
                 .GetInterfaces();
@@ -92,7 +92,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// <param name="type">依赖注入注册类型</param>
         /// <returns>服务对应生命周期</returns>
         /// <exception cref="ArgumentOutOfRangeException">注册服务找不到对应的周期类型</exception>
-        private static ServiceLifetime FindServiceDependencyLifetime(this Type type)
+        public static ServiceLifetime FindServiceDependencyLifetime(this Type type)
         {
             var interfaces = type.GetInterfaces();
 

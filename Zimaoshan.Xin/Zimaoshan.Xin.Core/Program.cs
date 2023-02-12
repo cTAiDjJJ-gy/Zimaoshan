@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Zimaoshan.Xin.Cache.Foundation;
@@ -6,11 +8,13 @@ using Zimaoshan.Xin.Core.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    containerBuilder.RegisterModule(new AutofacModule(Assembly.GetExecutingAssembly())));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHybridCache(builder.Configuration);
-
-builder.Services.ScanAndRegisterServices(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
