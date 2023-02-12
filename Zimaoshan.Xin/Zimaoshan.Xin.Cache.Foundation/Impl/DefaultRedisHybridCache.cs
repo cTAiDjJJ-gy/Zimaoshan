@@ -1,4 +1,6 @@
-﻿namespace Zimaoshan.Xin.Cache.Foundation.Impl;
+﻿using Microsoft.Extensions.Options;
+
+namespace Zimaoshan.Xin.Cache.Foundation.Impl;
 
 /// <summary>
 /// 混合模式
@@ -18,14 +20,18 @@ public class DefaultRedisHybridCache : ICache
 
     #region Ctors
 
-    public DefaultRedisHybridCache(ILocalCache localCache, IDistributedCache distributedCache,ICacheBus bus)
+    public DefaultRedisHybridCache(
+        ILocalCache localCache,
+        IDistributedCache distributedCache,
+        ICacheBus bus,
+        IOptions<CacheOptions> optionsAccessor)
     {
         _localCache = localCache;
         _distributedCache = distributedCache;
         _bus = bus;
 
         _cacheId = Guid.NewGuid().ToString();
-        _topicName = "Zimaoshan";
+        _topicName = optionsAccessor.Value.TopicName;
 
         this.InitSubscribe();
     }

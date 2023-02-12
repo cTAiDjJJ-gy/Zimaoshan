@@ -1,4 +1,5 @@
 ﻿using StackExchange.Redis;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Zimaoshan.Xin.Cache.Foundation;
@@ -43,5 +44,17 @@ internal static class Extensions
     {
         var span = new ReadOnlySpan<byte>(bytes, 0, bytes.Length);
         return JsonSerializer.Deserialize<T>(span);
+    }
+
+    /// <summary>
+    /// 获取程序集名称
+    /// </summary>
+    /// <param name="assembly"></param>
+    /// <returns></returns>
+    public static string GetFriendlyAssemblyName(this Assembly assembly)
+    {
+        var fullName = assembly.FullName;
+        var name = fullName![..fullName!.IndexOf(',')];
+        return name;
     }
 }

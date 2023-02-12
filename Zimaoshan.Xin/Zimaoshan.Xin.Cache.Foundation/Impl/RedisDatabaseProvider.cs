@@ -19,7 +19,7 @@ public class RedisDatabaseProvider : IRedisDatabaseProvider
     public RedisDatabaseProvider(IConfiguration configuration)
     {
         var connection = configuration.GetConnectionString("Redis");
-        _connectionMultiplexer = new Lazy<ConnectionMultiplexer>(CreateConnectionMultiplexer(connection));
+        _connectionMultiplexer = new Lazy<ConnectionMultiplexer>(CreateConnectionMultiplexer(connection!));
     }
 
     #endregion

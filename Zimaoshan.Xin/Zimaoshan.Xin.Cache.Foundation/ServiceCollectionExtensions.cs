@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Zimaoshan.Xin.Cache.Foundation.Impl;
 
@@ -19,7 +20,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddHybridCache(this IServiceCollection services)
+    public static IServiceCollection AddHybridCache(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMemoryCache();
         services.AddSingleton<ILocalCache, DefaultLocalCache>();
@@ -28,6 +29,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDistributedCache, DefaultRedisCache>();
 
         services.Replace(ServiceDescriptor.Singleton(typeof(ICache), typeof(DefaultRedisHybridCache)));
+
+        services.Configure<CacheOptions>(configuration.GetSection("Cache:Redis"));
 
         return services;
     }
