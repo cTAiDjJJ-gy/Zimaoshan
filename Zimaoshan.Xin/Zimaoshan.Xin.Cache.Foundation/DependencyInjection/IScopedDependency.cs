@@ -1,5 +1,8 @@
 ﻿namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
 
-public interface IScopedDependency
+/// <summary>
+/// 请求作用域依赖
+/// </summary>
+public interface IScopedDependency : IDependency
 {
 }

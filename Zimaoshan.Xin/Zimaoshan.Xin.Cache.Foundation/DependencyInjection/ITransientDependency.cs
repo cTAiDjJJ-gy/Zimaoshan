@@ -1,5 +1,8 @@
 ﻿namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
 
-public interface ITransientDependency
+/// <summary>
+/// 瞬时依赖
+/// </summary>
+public interface ITransientDependency : IDependency
 {
 }

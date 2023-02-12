@@ -1,5 +1,8 @@
 ﻿namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
 
-public interface ISingletonDependency
+/// <summary>
+/// 单例依赖
+/// </summary>
+public interface ISingletonDependency : IDependency
 {
 }

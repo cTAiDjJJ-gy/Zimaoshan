@@ -1,14 +1,16 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 using Zimaoshan.Xin.Cache.Foundation;
+using Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
+using Zimaoshan.Xin.Core.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddLocalCache();
-//builder.Services.AddRedisCache();
 builder.Services.AddHybridCache(builder.Configuration);
+
+builder.Services.ScanAndRegisterServices(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
@@ -36,6 +38,12 @@ app.MapDelete("/cache/{key}", (string key, ICache cache) =>
 {
     cache.Remove(key);
     return Results.Ok("success");
+});
+
+app.MapGet("/test", (ITest t,IServiceProvider provider) =>
+{
+    var other = provider.GetService<ITest>();
+    return Results.Ok($"{t.GetNowTime()} | {other!.GetNowTime()}");
 });
 
 app.Run();
