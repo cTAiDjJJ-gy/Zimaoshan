@@ -1,10 +1,13 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Features.AttributeFilters;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Reflection;
 using Zimaoshan.Xin.Cache.Foundation;
 using Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
 using Zimaoshan.Xin.Core.Application;
+using Zimaoshan.Xin.Core.Application.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,10 +47,22 @@ app.MapDelete("/cache/{key}", (string key, ICache cache) =>
     return Results.Ok("success");
 });
 
-app.MapGet("/test", (ITest t,IServiceProvider provider) =>
+app.MapGet("/test", (ITest t, IServiceProvider provider) =>
 {
     var other = provider.GetService<ITest>();
     return Results.Ok($"{t.GetNowTime()} | {other!.GetNowTime()}");
+});
+
+app.MapGet("/test2", ([KeyFilter("test2")] ITest2 t, IComponentContext context) =>
+{
+    var test2 = context.Resolve<ITest2>();
+    return Results.Ok($"{t?.GetNowTime()} | {test2?.GetNowTime()}");
+});
+
+app.MapGet("/test3", ([KeyFilter("test3")] ITest2 t, IComponentContext context) =>
+{
+    var test3 = context.Resolve<ITest2>();
+    return Results.Ok($"{t?.GetNowTime()} | {test3?.GetNowTime()}");
 });
 
 app.Run();

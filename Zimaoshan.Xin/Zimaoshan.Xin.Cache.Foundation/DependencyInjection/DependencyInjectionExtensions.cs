@@ -36,11 +36,14 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
 
             foreach (var type in types)
             {
-                var registerType = type.FindDependencyInterface();
-                if (registerType == null) continue;
+                var registerInterfaces = type.FindDependencyInterfaces();
+                if (registerInterfaces == null) continue;
 
                 var serviceLifetime = type.FindServiceDependencyLifetime();
-                services.Add(new ServiceDescriptor(registerType, type, serviceLifetime));
+                foreach(var registerInterface in registerInterfaces)
+                {
+                    services.Add(new ServiceDescriptor(registerInterface, type, serviceLifetime));
+                }
             }
         }
 
@@ -65,25 +68,16 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// 获取类型依赖注入接口
         /// </summary>
         /// <param name="type"></param>
-        /// <returns></returns>
-        public static Type? FindDependencyInterface(this Type type)
+        /// <returns>业务接口</returns>
+        public static IEnumerable<Type> FindDependencyInterfaces(this Type type)
         {
-            var t = type
-                .GetInterfaces();
-
-            var interfaces = t
-                .Where(x => 
+            return type
+                .GetInterfaces()
+                .Where(x =>
                     !x.IsAssignableFrom(typeof(IDependency)) &&
                     !x.IsAssignableFrom(typeof(ISingletonDependency)) &&
                     !x.IsAssignableFrom(typeof(IScopedDependency)) &&
-                    !x.IsAssignableFrom(typeof(ITransientDependency)))
-                .ToList();
-
-            if (!interfaces.Any()) { return null; }
-
-            var registerType = interfaces.FirstOrDefault(t => t.Name.ToUpper().Contains(type.Name.ToUpper()));
-
-            return registerType;
+                    !x.IsAssignableFrom(typeof(ITransientDependency)));
         }
 
         /// <summary>
@@ -94,24 +88,36 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// <exception cref="ArgumentOutOfRangeException">注册服务找不到对应的周期类型</exception>
         public static ServiceLifetime FindServiceDependencyLifetime(this Type type)
         {
+            var lifeScope = type.FindServiceDependencyLifetimeOrNull();
+
+            return lifeScope.HasValue ? lifeScope.Value : throw new ArgumentOutOfRangeException($"Provided ServiceLifetime type is invalid. Lifetime:{type.Name}");
+        }
+
+        /// <summary>
+        /// 获取服务生命周期，可空
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static ServiceLifetime? FindServiceDependencyLifetimeOrNull(this Type type)
+        {
             var interfaces = type.GetInterfaces();
 
             if (interfaces.Any(x => x == typeof(ISingletonDependency)))
             {
                 return ServiceLifetime.Singleton;
             }
-            else if (interfaces.Any(x => x == typeof(IScopedDependency)))
+
+            if (interfaces.Any(x => x == typeof(IScopedDependency)))
             {
                 return ServiceLifetime.Scoped;
             }
-            else if (interfaces.Any(x => x == typeof(ITransientDependency)))
+
+            if (interfaces.Any(x => x == typeof(ITransientDependency)))
             {
                 return ServiceLifetime.Transient;
             }
-            else
-            {
-                throw new ArgumentOutOfRangeException($"Provided ServiceLifetime type is invalid. Lifetime:{type.Name}");
-            }
+
+            return null;
         }
     }
 }
