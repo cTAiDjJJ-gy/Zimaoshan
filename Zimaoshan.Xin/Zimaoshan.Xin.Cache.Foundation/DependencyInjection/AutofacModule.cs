@@ -51,16 +51,21 @@ public class AutofacModule : Module
         var registerInterfaces = component.ServiceType?.FindDependencyInterfaces();
         if (registerInterfaces == null || !registerInterfaces.Any()) return;
 
-        IRegistrationBuilder<object, ReflectionActivatorData, object> next = default!;
+        IRegistrationBuilder<object, ReflectionActivatorData, object> next;
+        if (component.IsDynamicGeneric)
+        {
+            next = builder.RegisterGeneric(component.ServiceType!).PropertiesAutowired();
+        }
+        else
+        {
+            next = builder.RegisterType(component.ServiceType!).PropertiesAutowired();
+        }
 
         if (component.Mode == LocationMode.Interface)
         {
             foreach(var registerInterface in registerInterfaces)
             {
-                next = builder
-                    .RegisterType(component.ServiceType!)
-                    .As(registerInterface)
-                    .PropertiesAutowired();
+                next = next.As(registerInterface);
             }
         }
 
@@ -71,8 +76,8 @@ public class AutofacModule : Module
             {
                 var serviceType = componentAttribute!.Service != null ? componentAttribute.Service : registerInterface;
                 next = componentAttribute!.Key != null
-                    ? builder.RegisterType(component.ServiceType!).As(serviceType).Keyed(componentAttribute.Key, serviceType).PropertiesAutowired()
-                    : builder.RegisterType(component.ServiceType!).As(serviceType).PropertiesAutowired();
+                    ? next.As(serviceType).Keyed(componentAttribute.Key, serviceType)
+                    : next.As(serviceType);
             }
                 
         }
