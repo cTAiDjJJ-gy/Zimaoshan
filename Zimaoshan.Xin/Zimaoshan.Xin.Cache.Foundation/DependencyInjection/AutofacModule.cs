@@ -59,7 +59,8 @@ public class AutofacModule : Module
             {
                 next = builder
                     .RegisterType(component.ServiceType!)
-                    .As(registerInterface);
+                    .As(registerInterface)
+                    .PropertiesAutowired();
             }
         }
 
@@ -70,8 +71,8 @@ public class AutofacModule : Module
             {
                 var serviceType = componentAttribute!.Service != null ? componentAttribute.Service : registerInterface;
                 next = componentAttribute!.Key != null
-                    ? builder.RegisterType(component.ServiceType!).As(serviceType).Keyed(componentAttribute.Key, serviceType)
-                    : builder.RegisterType(component.ServiceType!).As(serviceType);
+                    ? builder.RegisterType(component.ServiceType!).As(serviceType).Keyed(componentAttribute.Key, serviceType).PropertiesAutowired()
+                    : builder.RegisterType(component.ServiceType!).As(serviceType).PropertiesAutowired();
             }
                 
         }

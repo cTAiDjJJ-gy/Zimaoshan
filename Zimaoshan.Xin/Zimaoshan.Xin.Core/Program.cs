@@ -53,15 +53,15 @@ app.MapGet("/test", (ITest t, IServiceProvider provider) =>
     return Results.Ok($"{t.GetNowTime()} | {other!.GetNowTime()}");
 });
 
-app.MapGet("/test2", ([KeyFilter("test2")] ITest2 t, IComponentContext context) =>
+app.MapGet("/test2", (ITest2 t, IComponentContext context) =>
 {
     var test2 = context.Resolve<ITest2>();
     return Results.Ok($"{t?.GetNowTime()} | {test2?.GetNowTime()}");
 });
 
-app.MapGet("/test3", ([KeyFilter("test3")] ITest2 t, IComponentContext context) =>
+app.MapGet("/test3", (ITest3 t, IComponentContext context) =>
 {
-    var test3 = context.Resolve<ITest2>();
+    var test3 = context.Resolve<ITest3>();
     return Results.Ok($"{t?.GetNowTime()} | {test3?.GetNowTime()}");
 });
 
