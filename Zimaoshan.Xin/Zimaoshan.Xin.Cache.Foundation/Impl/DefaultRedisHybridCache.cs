@@ -69,11 +69,11 @@ public class DefaultRedisHybridCache : ICache
         _bus.Publish(_topicName, new() { Id = _cacheId, CacheKey = key });
     }
 
-    public void Set<T>(string key, T obj)
+    public void Set<T>(string key, T obj, TimeSpan? timeout = null)
     {
-        _localCache.Set(key, obj);
+        _localCache.Set(key, obj, timeout);
 
-        _distributedCache.Set(key, obj);
+        _distributedCache.Set(key, obj, timeout);
 
         _bus.Publish(_topicName, new() { Id = _cacheId, CacheKey = key });
     }

@@ -1,5 +1,4 @@
 ﻿using Zimaoshan.Xin.Cache.Foundation.Annotations;
-using Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
 
 namespace Zimaoshan.Xin.Core.Application.Impl;
 

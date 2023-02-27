@@ -36,7 +36,7 @@ public class DefaultLocalCache : ILocalCache
 
     public void Remove(string key) => _cache.Remove(key);
 
-    public void Set<T>(string key, T obj) => _cache.Set(key, obj, DateTimeOffset.Now.Add(TimeSpan.FromMinutes(5)));
+    public void Set<T>(string key, T obj, TimeSpan? timeout = null) => _cache.Set(key, obj, DateTimeOffset.Now.Add(timeout ?? TimeSpan.FromMinutes(5)));
 
     #endregion
 }

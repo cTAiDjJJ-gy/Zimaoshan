@@ -1,7 +1,10 @@
-﻿namespace Zimaoshan.Xin.Core.Application;
+﻿using Zimaoshan.Xin.Cache.Foundation.Annotations;
+
+namespace Zimaoshan.Xin.Core.Application;
 
 public interface IOther
 {
+    [Cache("Other")]
     string Get();
 }
 

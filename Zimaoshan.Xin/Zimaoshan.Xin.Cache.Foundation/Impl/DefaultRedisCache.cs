@@ -35,10 +35,17 @@ public class DefaultRedisCache : IDistributedCache
         GetDatabase().KeyDelete(key);
     }
 
-    public void Set<T>(string key, T obj)
+    /// <summary>
+    /// 设置值
+    /// </summary>
+    /// <typeparam name="T">泛型值</typeparam>
+    /// <param name="key">key</param>
+    /// <param name="obj">value</param>
+    /// <param name="timeout">默认5分钟</param>
+    public void Set<T>(string key, T obj, TimeSpan? timeout = null)
     {
         var cache = GetDatabase();
-        cache.StringSet(key, obj.Serialize<T>(), TimeSpan.FromMinutes(5));
+        cache.StringSet(key, obj.Serialize<T>(), timeout ?? TimeSpan.FromMinutes(5));
     }
 
     #endregion

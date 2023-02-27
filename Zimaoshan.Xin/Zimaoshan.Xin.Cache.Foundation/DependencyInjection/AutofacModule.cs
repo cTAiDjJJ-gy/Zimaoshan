@@ -1,9 +1,11 @@
 ﻿using Autofac;
 using Autofac.Builder;
+using Autofac.Extras.DynamicProxy;
 using Autofac.Features.AttributeFilters;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Zimaoshan.Xin.Cache.Foundation.Annotations;
+using Zimaoshan.Xin.Cache.Foundation.Interceptors;
 using Module = Autofac.Module;
 
 namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection;
@@ -36,6 +38,8 @@ public class AutofacModule : Module
 
             foreach (var component in components)
             {
+                builder.RegisterType<CacheInterceptor>();
+
                 RegisterDependenciesByAssembly(builder, component);
             }
         }
@@ -54,11 +58,11 @@ public class AutofacModule : Module
         IRegistrationBuilder<object, ReflectionActivatorData, object> next;
         if (component.IsDynamicGeneric)
         {
-            next = builder.RegisterGeneric(component.ServiceType!).PropertiesAutowired();
+            next = builder.RegisterGeneric(component.ServiceType!).PropertiesAutowired().EnableInterfaceInterceptors().InterceptedBy(typeof(CacheInterceptor));
         }
         else
         {
-            next = builder.RegisterType(component.ServiceType!).PropertiesAutowired();
+            next = builder.RegisterType(component.ServiceType!).PropertiesAutowired().EnableInterfaceInterceptors().InterceptedBy(typeof(CacheInterceptor));
         }
 
         if (component.Mode == LocationMode.Interface)

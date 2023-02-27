@@ -23,7 +23,7 @@ public class Test2 : ITest2
     public IOther? Other { get; set; }
     public string GetNowTime()
     {
-        return $"Hello! Test2 Not time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {Other?.Get()}";
+        return $"Hello! Test2 Now time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {Other?.Get()}";
     }
 }
 
@@ -33,6 +33,6 @@ public class Test3 : ITest3
     public IOther<Other>? GenericOther { get; set; }
     public string GetNowTime()
     {
-        return $"Hello! Test3 Not time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {GenericOther?.Get().Get() ?? throw new ArgumentNullException(nameof(GenericOther))}";
+        return $"Hello! Test3 Now time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {GenericOther?.Get().Get() ?? throw new ArgumentNullException(nameof(GenericOther))}";
     }
 }
