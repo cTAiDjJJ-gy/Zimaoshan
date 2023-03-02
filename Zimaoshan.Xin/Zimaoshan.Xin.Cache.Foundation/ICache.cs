@@ -10,4 +10,6 @@ public interface ICache
     void Remove(string key);
 
     void Set<T>(string key, T obj, TimeSpan? timeout = null);
+
+    IEnumerable<string> GetAllKey();
 }

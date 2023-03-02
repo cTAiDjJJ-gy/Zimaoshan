@@ -30,9 +30,9 @@ public class Test2 : ITest2
 [Component(service: typeof(ITest3), lifetimeScope: ServiceLifetime.Transient)]
 public class Test3 : ITest3
 {
-    public IOther<Other>? GenericOther { get; set; }
+    public IOther<IOther>? GenericOther { get; set; }
     public string GetNowTime()
     {
-        return $"Hello! Test3 Now time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {GenericOther?.Get().Get() ?? throw new ArgumentNullException(nameof(GenericOther))}";
+        return $"Hello! GetHashCode: {GetHashCode()} -> Call Me: {GenericOther?.Get().Get() ?? throw new ArgumentNullException(nameof(GenericOther))}";
     }
 }

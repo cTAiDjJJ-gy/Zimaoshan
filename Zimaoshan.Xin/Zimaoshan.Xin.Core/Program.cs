@@ -47,6 +47,11 @@ app.MapDelete("/cache/{key}", (string key, ICache cache) =>
     return Results.Ok("success");
 });
 
+app.MapGet("/cache/allkey", (ICache cache) =>
+{
+    return Results.Ok($"keys: {string.Join(",", cache.GetAllKey())}");
+});
+
 app.MapGet("/test", (ITest t, IServiceProvider provider) =>
 {
     var other = provider.GetService<ITest>();

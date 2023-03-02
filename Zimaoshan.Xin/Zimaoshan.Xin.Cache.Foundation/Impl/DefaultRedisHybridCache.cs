@@ -11,6 +11,7 @@ public class DefaultRedisHybridCache : ICache
 
     private readonly ILocalCache _localCache;
     private readonly IDistributedCache _distributedCache;
+    private readonly List<string> _keys = new();
 
     private readonly ICacheBus _bus;
     private readonly string _cacheId;
@@ -18,7 +19,7 @@ public class DefaultRedisHybridCache : ICache
 
     #endregion
 
-    #region Ctors
+    #region Constructor
 
     public DefaultRedisHybridCache(
         ILocalCache localCache,
@@ -60,6 +61,9 @@ public class DefaultRedisHybridCache : ICache
         return result;
     }
 
+    public IEnumerable<string> GetAllKey() => _keys;
+
+
     public void Remove(string key)
     {
         _localCache.Remove(key);
@@ -67,6 +71,8 @@ public class DefaultRedisHybridCache : ICache
         _distributedCache.Remove(key);
 
         _bus.Publish(_topicName, new() { Id = _cacheId, CacheKey = key });
+
+        _keys.Remove(key);
     }
 
     public void Set<T>(string key, T obj, TimeSpan? timeout = null)
@@ -76,6 +82,9 @@ public class DefaultRedisHybridCache : ICache
         _distributedCache.Set(key, obj, timeout);
 
         _bus.Publish(_topicName, new() { Id = _cacheId, CacheKey = key });
+
+        if (!_keys.Any(k => k == key))
+            _keys.Add(key);
     }
 
     #endregion
@@ -100,6 +109,7 @@ public class DefaultRedisHybridCache : ICache
         if (!string.IsNullOrEmpty(message.Id) && message.Id.Equals(_cacheId,StringComparison.OrdinalIgnoreCase)) { return; }
 
         _localCache.Remove(message.CacheKey!);
+        _keys.Remove(message.CacheKey!);
     }
 
     #endregion

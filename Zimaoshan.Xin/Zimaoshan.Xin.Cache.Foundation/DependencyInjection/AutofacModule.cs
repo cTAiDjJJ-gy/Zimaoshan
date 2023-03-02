@@ -99,8 +99,7 @@ public class AutofacModule : Module
                 {
                     next.As(serviceType);
                 }
-            }
-                
+            } 
         }
 
         if (next == null) return;

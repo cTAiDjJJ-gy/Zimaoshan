@@ -11,10 +11,11 @@ public class DefaultLocalCache : ILocalCache
     #region Field
 
     private readonly IMemoryCache _cache;
+    private readonly List<string> _keys = new();
 
     #endregion
 
-    #region Ctor
+    #region Constructor
 
     public DefaultLocalCache(IMemoryCache cache) => _cache = cache;
 
@@ -34,9 +35,20 @@ public class DefaultLocalCache : ILocalCache
         return default;
     }
 
-    public void Remove(string key) => _cache.Remove(key);
+    public IEnumerable<string> GetAllKey() => _keys;
 
-    public void Set<T>(string key, T obj, TimeSpan? timeout = null) => _cache.Set(key, obj, DateTimeOffset.Now.Add(timeout ?? TimeSpan.FromMinutes(5)));
+    public void Remove(string key)
+    {
+        _cache.Remove(key);
+        _keys.Remove(key);
+    }
+
+    public void Set<T>(string key, T obj, TimeSpan? timeout = null)
+    {
+        _cache.Set(key, obj, DateTimeOffset.Now.Add(timeout ?? TimeSpan.FromMinutes(5)));
+        if (!_keys.Any(k => k == key))
+            _keys.Add(key);
+    }
 
     #endregion
 }

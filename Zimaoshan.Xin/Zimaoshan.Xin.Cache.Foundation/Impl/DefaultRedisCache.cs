@@ -12,10 +12,11 @@ public class DefaultRedisCache : IDistributedCache
     #region Fields
 
     private readonly IRedisDatabaseProvider _redisDatabaseProvider;
+    private readonly List<string> _keys = new();
 
     #endregion
 
-    #region Ctor
+    #region Constructor
 
     public DefaultRedisCache(IRedisDatabaseProvider redisDatabaseProvider) => _redisDatabaseProvider = redisDatabaseProvider;
 
@@ -30,9 +31,12 @@ public class DefaultRedisCache : IDistributedCache
         return !result.IsNullOrEmpty ? result.Deserialize<T>() : default;
     }
 
+    public IEnumerable<string> GetAllKey() => _keys;
+
     public void Remove(string key)
     {
         GetDatabase().KeyDelete(key);
+        _keys.Remove(key);
     }
 
     /// <summary>
@@ -46,6 +50,9 @@ public class DefaultRedisCache : IDistributedCache
     {
         var cache = GetDatabase();
         cache.StringSet(key, obj.Serialize<T>(), timeout ?? TimeSpan.FromMinutes(5));
+
+        if (!_keys.Any(k => k == key))
+            _keys.Add(key);
     }
 
     #endregion

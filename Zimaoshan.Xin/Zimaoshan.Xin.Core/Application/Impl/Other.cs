@@ -3,7 +3,7 @@
 namespace Zimaoshan.Xin.Core.Application.Impl;
 
 [Component(lifetimeScope: ServiceLifetime.Transient)]
-public class Other : IOther 
+public class Other : IOther
 {
     public string Get()
     {
@@ -23,6 +23,6 @@ public class GenericOther<T> : IOther<T> where T : IOther
 
     public T Get()
     {
-        return (T?)Call ?? throw new ArgumentNullException(nameof(Call));
+        return (T)(Call ?? throw new ArgumentNullException(nameof(Call)));
     }
 }
