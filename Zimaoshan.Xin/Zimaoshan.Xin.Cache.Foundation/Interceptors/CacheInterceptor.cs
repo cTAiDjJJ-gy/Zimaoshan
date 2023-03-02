@@ -30,6 +30,21 @@ public class CacheInterceptor : IInterceptor
         if (cacheAttribute != null)
         {
             var key = cacheAttribute.CacheKey;
+            var parameters = invocation.Method.GetParameters();
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                var prefix = GetPrefixParameter(parameters[i].Name!);
+                if (key.IndexOf(prefix) != -1)
+                {
+                    var value = parameters[i].ParameterType.Name switch
+                    {
+                        nameof(String) or nameof(Int32) => invocation.Arguments[i].ToString(),
+                        _ => DateTime.UtcNow.ToString("yyyyMMdd_HHmmss")
+                    };
+                    key = key.Replace($"{prefix}", value);
+                }
+            }
+
             var cacheMethod = _cache.GetType().GetMethod(nameof(ICache.Get), BindingFlags.Public | BindingFlags.Instance);
 
             var cacheMethodFunc = cacheMethod?.MakeGenericMethod(invocation.Method.ReturnType);
@@ -50,6 +65,8 @@ public class CacheInterceptor : IInterceptor
 
         invocation.Proceed();
     }
+
+    private string GetPrefixParameter(string name) => $"@{name}";
 
     #endregion
 }

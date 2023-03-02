@@ -58,18 +58,26 @@ public class AutofacModule : Module
         IRegistrationBuilder<object, ReflectionActivatorData, object> next;
         if (component.IsDynamicGeneric)
         {
-            next = builder.RegisterGeneric(component.ServiceType!).PropertiesAutowired().EnableInterfaceInterceptors().InterceptedBy(typeof(CacheInterceptor));
+            next = builder.RegisterGeneric(component.ServiceType!)
+                .PropertiesAutowired()
+                .EnableInterfaceInterceptors();
         }
         else
         {
-            next = builder.RegisterType(component.ServiceType!).PropertiesAutowired().EnableInterfaceInterceptors().InterceptedBy(typeof(CacheInterceptor));
+            next = builder.RegisterType(component.ServiceType!)
+                .PropertiesAutowired()
+                .EnableInterfaceInterceptors();
         }
 
         if (component.Mode == LocationMode.Interface)
         {
             foreach(var registerInterface in registerInterfaces)
             {
-                next = next.As(registerInterface);
+                if (registerInterface.WithCache)
+                {
+                    next.InterceptedBy(typeof(CacheInterceptor));
+                }
+                next.As(registerInterface.Interface);
             }
         }
 
@@ -78,10 +86,19 @@ public class AutofacModule : Module
             var componentAttribute = component.ServiceType?.GetCustomAttribute<ComponentAttribute>();
             foreach (var registerInterface in registerInterfaces)
             {
-                var serviceType = componentAttribute!.Service != null ? componentAttribute.Service : registerInterface;
-                next = componentAttribute!.Key != null
-                    ? next.As(serviceType).Keyed(componentAttribute.Key, serviceType)
-                    : next.As(serviceType);
+                if (registerInterface.WithCache)
+                {
+                    next.InterceptedBy(typeof(CacheInterceptor));
+                }
+                var serviceType = componentAttribute!.Service != null ? componentAttribute.Service : registerInterface.Interface;
+                if (componentAttribute!.Key != null)
+                {
+                    next.As(serviceType).Keyed(componentAttribute.Key, serviceType);
+                }
+                else
+                {
+                    next.As(serviceType);
+                }
             }
                 
         }

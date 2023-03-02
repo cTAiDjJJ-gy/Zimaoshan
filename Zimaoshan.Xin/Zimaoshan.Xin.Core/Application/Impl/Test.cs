@@ -23,7 +23,7 @@ public class Test2 : ITest2
     public IOther? Other { get; set; }
     public string GetNowTime()
     {
-        return $"Hello! Test2 Now time is: {DateTime.Now}. GetHashCode: {GetHashCode()} -> Call Me: {Other?.Get()}";
+        return $"Hello! GetHashCode: {GetHashCode()} -> Call Me: {Other?.GetByUserID("gavin")}";
     }
 }
 

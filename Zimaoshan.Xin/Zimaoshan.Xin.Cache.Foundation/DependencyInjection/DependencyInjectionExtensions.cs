@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Zimaoshan.Xin.Cache.Foundation.Annotations;
 
 namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
 {
@@ -42,7 +43,7 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
                 var serviceLifetime = type.FindServiceDependencyLifetime();
                 foreach(var registerInterface in registerInterfaces)
                 {
-                    services.Add(new ServiceDescriptor(registerInterface, type, serviceLifetime));
+                    services.Add(new ServiceDescriptor(registerInterface.Interface, type, serviceLifetime));
                 }
             }
         }
@@ -68,8 +69,8 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
         /// 获取类型依赖注入接口
         /// </summary>
         /// <param name="type"></param>
-        /// <returns>业务接口</returns>
-        public static IEnumerable<Type> FindDependencyInterfaces(this Type type)
+        /// <returns>业务接口和接口缓存</returns>
+        public static IEnumerable<(Type Interface, bool WithCache)> FindDependencyInterfaces(this Type type)
         {
             return type
                 .GetInterfaces()
@@ -77,7 +78,18 @@ namespace Zimaoshan.Xin.Cache.Foundation.DependencyInjection
                     !x.IsAssignableFrom(typeof(IDependency)) &&
                     !x.IsAssignableFrom(typeof(ISingletonDependency)) &&
                     !x.IsAssignableFrom(typeof(IScopedDependency)) &&
-                    !x.IsAssignableFrom(typeof(ITransientDependency)));
+                    !x.IsAssignableFrom(typeof(ITransientDependency)))
+                .Select(t =>
+                {
+                    if (t.GetCustomAttribute<WithCacheAttribute>() != null)
+                    {
+                        return (t, true);
+                    }
+                    else
+                    {
+                        return (t, false);
+                    }
+                });
         }
 
         /// <summary>

@@ -9,6 +9,11 @@ public class Other : IOther
     {
         return "调，都能调";
     }
+
+    public string GetByUserID(string userID)
+    {
+        return $"Now: {DateTime.UtcNow} => ID({userID}): 你是谁，你好帅!";
+    }
 }
 
 [Component(lifetimeScope: ServiceLifetime.Transient)]
